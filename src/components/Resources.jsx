@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import ApplyModalLauncher from "./ApplyModalLauncher";
 
 const Resources = () => {
   const styles = {
@@ -105,6 +106,9 @@ const Resources = () => {
     },
   ];
 
+
+  const [open, setOpen] = useState(false);
+
   return (
     <section id="resources" style={styles.section}>
       <h2 style={styles.title}>Mortgage Resources</h2>
@@ -149,18 +153,29 @@ const Resources = () => {
             We’ll connect you with an AVIAR loan officer.
           </p>
         </div>
-        <a
-          href="#contact"
-          style={styles.btnPrimary}
-          onMouseEnter={(e) =>
-            Object.assign(e.currentTarget.style, styles.btnHover)
-          }
-          onMouseLeave={(e) =>
-            Object.assign(e.currentTarget.style, styles.btnPrimary)
-          }
-        >
-          Start Now
-        </a>
+
+        <div className="cta-banner" id="apply">
+          <a
+            // href="#contact"
+            style={styles.btnPrimary}
+            onClick={()=>{setOpen(true)}}
+            onMouseEnter={(e) =>
+              Object.assign(e.currentTarget.style, styles.btnHover)
+            }
+            onMouseLeave={(e) =>
+              Object.assign(e.currentTarget.style, styles.btnPrimary)
+            }
+          >
+            {/* Use this button anywhere you want */}
+            {/* <button className="btn-primary" onClick={() => setOpen(true)}> */}
+            Start now
+            {/* </button> */}
+          </a>
+
+          {/* This handles modal + iframe + fallback */}
+          <ApplyModalLauncher setOpen={setOpen} open={open} />
+        </div>
+
       </div>
     </section>
   );
