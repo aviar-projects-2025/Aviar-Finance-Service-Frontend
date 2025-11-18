@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import QuickCalculator from "./QuickCalculator";
+import ApplyModalLauncher from "./ApplyModalLauncher";
 
 const Hero = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -29,7 +32,7 @@ const Hero = () => {
     },
     left: {
       flex: 1,
-      marginTop : "40px",
+      marginTop: "40px",
       textAlign: isMobile ? "center" : "left",
     },
     pill: {
@@ -117,7 +120,7 @@ const Hero = () => {
           </p>
 
           <div style={styles.btnGroup}>
-            <a href="#apply" style={styles.btnPrimary}>
+            <a href="#apply" onClick={() => { setOpenModal(true) }} style={styles.btnPrimary}>
               Get Pre-Qualified
             </a>
             <a href="#tools" style={styles.btnOutline}>
@@ -130,13 +133,16 @@ const Hero = () => {
           </p>
         </div>
 
-         {/* Right side - Calculator first on mobile */}
+        {/* Right side - Calculator first on mobile */}
         <div style={styles.right}>
           <div style={styles.calculatorWrapper}>
             <QuickCalculator />
           </div>
         </div>
       </div>
+
+      <ApplyModalLauncher setOpen={setOpenModal} open={openModal} />
+
     </section>
   );
 };

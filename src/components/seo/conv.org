@@ -1,0 +1,32 @@
+{
+  "@context": "https://schema.org",
+  "@type": "MortgageLoan",
+  "name": "Conventional Home Loans",
+  "description": "Conventional mortgage options from AVIAR Financial Services, a Bloomington IL mortgage broker offering low down payment and flexible term home loans.",
+  "loanType": "Conventional mortgage",
+  "provider": {
+    "@type": "FinancialService",
+    "name": "AVIAR Financial Services LLC",
+    "image": "https://your-domain.com/path-to-logo.png",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "2103 Eastland Dr, STE A",
+      "addressLocality": "Bloomington",
+      "addressRegion": "IL",
+      "postalCode": "61704",
+      "addressCountry": "US"
+    },
+    "telephone": "+1-309-750-1082",
+    "url": "https://your-domain.com"
+  },
+  "areaServed": {
+    "@type": "City",
+    "name": "Bloomington",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Bloomington",
+      "addressRegion": "IL",
+      "addressCountry": "US"
+    }
+  }
+}

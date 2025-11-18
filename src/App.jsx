@@ -13,6 +13,13 @@ import RateScenario from "./components/tools/RateScenario";
 import RefinanceSavings from "./components/tools/RefinanceSavings";
 import DocumentChecklist from "./components/tools/DocumentChecklist";
 
+import ConventionalLoanPage from "./components/loanPages/ConventionalLoanPage.jsx"
+import FHALoanPage from "./components/loanPages/FHALoanPage.jsx"
+import VALoanPage from "./components/loanPages/VALoanPage.jsx"
+import USDALoanPage from "./components/loanPages/USDALoanPage.jsx"
+// import JumboLoanPage from "./components/loanPages/JumboLoanPage.jsx"
+
+
 
 
 function App() {
@@ -21,18 +28,21 @@ function App() {
 
   const closeModal = () => setOpenTool(null);
 
+  const [openLoan, setOpenLoan] = useState(null);
+
+  const closeLoanModal = () => setOpenLoan(null);
 
 
   return (
     <>
+
       <Header />
       <main>
         <Hero />
-        <LoanPrograms />
 
-        {/* Pass setter to Tools */}
+        <LoanPrograms onOpenLoan={setOpenLoan} />
+
         <Tools onOpenTool={setOpenTool} />
-
 
         <Resources />
         <ContactForm />
@@ -56,7 +66,26 @@ function App() {
           </div>
         </div>
       )}
+
+
+      {/* Loan Page Modals */}
+      {openLoan && (
+        <div className="modal-backdrop" onClick={closeLoanModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={closeLoanModal}>✖</button>
+
+            {openLoan === "CONVENTIONAL" && <ConventionalLoanPage />}
+            {openLoan === "FHA" && <FHALoanPage />}
+            {openLoan === "VA" && <VALoanPage />}
+            {openLoan === "USDA" && <USDALoanPage />}
+            {/* {openLoan === "JUMBO" && <JumboLoanPage />} */}
+          </div>
+        </div>
+      )}
+
     </>
+
+
   );
 }
 

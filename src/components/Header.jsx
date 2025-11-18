@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import ApplyModalLauncher from "./ApplyModalLauncher";
 
 const Header = () => {
   const [open, setOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   // Track screen resize to adjust layout dynamically
@@ -100,11 +102,12 @@ const Header = () => {
           <a href="#contact" style={styles.link}>
             Contact
           </a>
-          <a href="#apply" style={styles.btnPrimary}>
+          <a href="#apply" onClick={() => { setOpenModal(true) }} style={styles.btnPrimary}>
             Apply Now
           </a>
         </nav>
       </div>
+      <ApplyModalLauncher setOpen={setOpenModal} open={openModal} />
     </header>
   );
 };
