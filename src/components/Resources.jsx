@@ -84,6 +84,7 @@ const Resources = () => {
       fontWeight: "600",
       textDecoration: "none",
       transition: "all 0.2s ease",
+      cursor: "pointer",
     },
     btnHover: {
       backgroundColor: "#e0e7ff",
@@ -91,91 +92,110 @@ const Resources = () => {
     },
   };
 
-  const resourceList = [
-    {
-      title: "Buying in Illinois: what to know",
-      desc: "Local taxes, insurance, HOA.",
-    },
-    {
-      title: "First-time buyer roadmap",
-      desc: "From pre-approval to closing.",
-    },
-    {
-      title: "Today’s required documents",
-      desc: "W-2, paystubs, bank statements.",
-    },
+  const [open, setOpen] = useState(false);
+
+  const featuredGuides = [
+    { title: "Buying in Illinois: What to Know", desc: "Taxes, insurance, HOA basics for Illinois buyers." },
+    { title: "First-Time Buyer Roadmap", desc: "Follow the steps from pre-approval to closing." },
+    { title: "Refinance Decision Guide", desc: "Should you refi now or wait? Here's a simple breakdown." },
   ];
 
+  const checklists = [
+    { title: "Purchase: Document Checklist", desc: "W-2, paystubs, bank statements and more." },
+    { title: "Refinance: Document Checklist", desc: "Everything needed for a smooth refinance." },
+    { title: "Self-Employed Prep List", desc: "What lenders need from business owners." },
+  ];
 
-  const [open, setOpen] = useState(false);
+  const tools = [
+    { title: "Affordability Calculator", desc: "Estimate how much home you can afford." },
+    { title: "Refinance Savings Estimator", desc: "See potential savings with a new rate." },
+    { title: "Rate Scenario Tool", desc: "Preview payments at different interest rates." },
+    { title: "HELOC / Home Equity Tool", desc: "See how much equity you can borrow." },
+  ];
+
+  const faqs = [
+    { title: "How much down payment do I need?", desc: "Most buyers put 3–5%. Some can do 0%." },
+    { title: "What drives my interest rate?", desc: "Credit, loan type, property, and market conditions." },
+    { title: "Pre-approval vs Pre-qualification?", desc: "Pre-approval is verified; sellers prefer it." },
+    { title: "Buy now or wait for rates?", desc: "It depends on inventory, budget, and rate trends." },
+  ];
+
+  const glossary = [
+    { title: "DTI (Debt-to-Income)", desc: "Percentage of income that goes toward monthly debts." },
+    { title: "LTV (Loan-to-Value)", desc: "Loan amount divided by property value." },
+    { title: "Escrows", desc: "Lender-held funds for taxes and insurance." },
+    { title: "Points", desc: "Upfront fee to reduce your interest rate." },
+    { title: "APR", desc: "True yearly cost including fees + rate." },
+  ];
+
+  // Reusable card renderer
+  const renderCards = (items) => {
+    return items.map((item) => (
+      <div
+        key={item.title}
+        style={styles.card}
+        onMouseEnter={(e) => Object.assign(e.currentTarget.style, styles.cardHover)}
+        onMouseLeave={(e) =>
+          Object.assign(e.currentTarget.style, {
+            transform: "none",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.06)",
+          })
+        }
+      >
+        <h3 style={styles.h3}>{item.title}</h3>
+        <p style={styles.p}>{item.desc}</p>
+        <a
+          href="#"
+          style={styles.link}
+          onMouseEnter={(e) => Object.assign(e.currentTarget.style, styles.linkHover)}
+          onMouseLeave={(e) => Object.assign(e.currentTarget.style, styles.link)}
+        >
+          Read more →
+        </a>
+      </div>
+    ));
+  };
 
   return (
     <section id="resources" style={styles.section}>
       <h2 style={styles.title}>Mortgage Resources</h2>
 
-      <div style={styles.grid}>
-        {resourceList.map((item) => (
-          <div
-            key={item.title}
-            style={styles.card}
-            onMouseEnter={(e) =>
-              Object.assign(e.currentTarget.style, styles.cardHover)
-            }
-            onMouseLeave={(e) =>
-              Object.assign(e.currentTarget.style, {
-                transform: "none",
-                boxShadow: "0 4px 10px rgba(0,0,0,0.06)",
-              })
-            }
-          >
-            <h3 style={styles.h3}>{item.title}</h3>
-            <p style={styles.p}>{item.desc}</p>
-            <a
-              href="#"
-              style={styles.link}
-              onMouseEnter={(e) =>
-                Object.assign(e.currentTarget.style, styles.linkHover)
-              }
-              onMouseLeave={(e) =>
-                Object.assign(e.currentTarget.style, styles.link)
-              }
-            >
-              Read article →
-            </a>
-          </div>
-        ))}
-      </div>
+      {/* Featured Guides */}
+      <div style={styles.grid}>{renderCards(featuredGuides)}</div>
 
+      {/* Checklists */}
+      <h2 style={styles.title}>Checklists & Downloads</h2>
+      <div style={styles.grid}>{renderCards(checklists)}</div>
+
+      {/* Tools */}
+      <h2 style={styles.title}>Tools & Calculators</h2>
+      <div style={styles.grid}>{renderCards(tools)}</div>
+
+      {/* FAQs */}
+      <h2 style={styles.title}>Quick FAQs</h2>
+      <div style={styles.grid}>{renderCards(faqs)}</div>
+
+      {/* Glossary */}
+      <h2 style={styles.title}>Glossary Highlights</h2>
+      <div style={styles.grid}>{renderCards(glossary)}</div>
+
+      {/* CTA */}
       <div style={styles.cta} id="apply">
         <div>
           <h3 style={styles.ctaTitle}>Ready to start your application?</h3>
-          <p style={styles.ctaText}>
-            We’ll connect you with an AVIAR loan officer.
-          </p>
+          <p style={styles.ctaText}>We’ll connect you with an AVIAR loan officer.</p>
         </div>
 
-        <div className="cta-banner" id="apply">
-          <a
-            // href="#contact"
-            style={styles.btnPrimary}
-            onClick={()=>{setOpen(true)}}
-            onMouseEnter={(e) =>
-              Object.assign(e.currentTarget.style, styles.btnHover)
-            }
-            onMouseLeave={(e) =>
-              Object.assign(e.currentTarget.style, styles.btnPrimary)
-            }
-          >
-            {/* Use this button anywhere you want */}
-            {/* <button className="btn-primary" onClick={() => setOpen(true)}> */}
-            Start now
-            {/* </button> */}
-          </a>
+        <a
+          style={styles.btnPrimary}
+          onClick={() => setOpen(true)}
+          onMouseEnter={(e) => Object.assign(e.currentTarget.style, styles.btnHover)}
+          onMouseLeave={(e) => Object.assign(e.currentTarget.style, styles.btnPrimary)}
+        >
+          Start now
+        </a>
 
-          {/* This handles modal + iframe + fallback */}
-          <ApplyModalLauncher setOpen={setOpen} open={open} />
-        </div>
-
+        <ApplyModalLauncher setOpen={setOpen} open={open} />
       </div>
     </section>
   );

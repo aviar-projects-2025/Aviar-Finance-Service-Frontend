@@ -7,7 +7,22 @@ const loanData = [
   { title: "FHA Loans", tag: "Low down", desc: "Flexible credit, low down payment.", key: "FHA" },
   { title: "VA Loans", tag: "Veterans", desc: "0% down for eligible veterans.", key: "VA" },
   { title: "USDA Loans", tag: "Rural", desc: "0% down for eligible rural properties.", key: "USDA" },
-  { title: "Jumbo Loans", tag: "High value", desc: "For higher-priced homes." },
+  { title: "Jumbo Loans", tag: "High value", desc: "For higher-priced homes.", key: "JUMBO" },
+  {
+    title: "Non-QM / Bank Statement Loans",
+    tag: "Self-employed",
+    desc: "Qualify using bank statements instead of tax returns.",
+    key: "NON_QM",
+  },
+
+  {
+    title: "HELOC & Home Equity",
+    tag: "Access equity",
+    desc: "Tap into home equity without refinancing your first mortgage.",
+    key: "HOME_EQUITY",
+  },
+
+
 ];
 
 const LoanPrograms = ({ onOpenLoan }) => {

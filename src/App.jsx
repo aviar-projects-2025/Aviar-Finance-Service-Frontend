@@ -17,6 +17,9 @@ import ConventionalLoanPage from "./components/loanPages/ConventionalLoanPage.js
 import FHALoanPage from "./components/loanPages/FHALoanPage.jsx"
 import VALoanPage from "./components/loanPages/VALoanPage.jsx"
 import USDALoanPage from "./components/loanPages/USDALoanPage.jsx"
+import JumboLoansSection from "./components/loanPages/JumboLoansSection.jsx";
+import NonQMBankStatementSection from "./components/loanPages/NonQMBankStatementSection.jsx";
+import HomeEquitySection from "./components/loanPages/HomeEquitySection.jsx";
 // import JumboLoanPage from "./components/loanPages/JumboLoanPage.jsx"
 
 
@@ -63,6 +66,7 @@ function App() {
             {openTool === "Refinance" && <RefinanceSavings />}
             {openTool === "Rate" && <RateScenario />}
             {openTool === "Checklist" && <DocumentChecklist />}
+
           </div>
         </div>
       )}
@@ -78,7 +82,10 @@ function App() {
             {openLoan === "FHA" && <FHALoanPage />}
             {openLoan === "VA" && <VALoanPage />}
             {openLoan === "USDA" && <USDALoanPage />}
-            {/* {openLoan === "JUMBO" && <JumboLoanPage />} */}
+            {openLoan === "JUMBO" && <JumboLoansSection />}
+            {openLoan === "NON_QM" && <NonQMBankStatementSection />}
+            {openLoan === "HOME_EQUITY" && <HomeEquitySection />}
+
           </div>
         </div>
       )}
