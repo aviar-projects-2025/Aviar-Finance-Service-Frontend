@@ -208,6 +208,8 @@ const USDALoanPage = () => {
             <Info label="Income limits" value="Must be under county limit" />
             <Info label="Occupancy" value="Primary residence only" />
           </div>
+
+          <USDACalculator />
         </Section>
 
         <FAQSection />
@@ -385,3 +387,162 @@ const CTASection = () => (
 );
 
 export default USDALoanPage;
+
+
+
+
+const USDACalculator = () => {
+  const [inputs, setInputs] = React.useState({
+    homePrice: 300000,
+    downPaymentPercent: 0,
+    rate: 6.25,
+    term: 30,
+  });
+
+  const update = (field, value) => {
+    setInputs({ ...inputs, [field]: value });
+  };
+
+  const downPaymentAmount = (inputs.homePrice * (inputs.downPaymentPercent / 100)) || 0;
+  const loanAmount = inputs.homePrice - downPaymentAmount;
+
+  // USDA Guarantee Fee (1% financed)
+  const guaranteeFee = loanAmount * 0.01;
+  const totalLoanFinanced = loanAmount + guaranteeFee;
+
+  // Monthly interest and term
+  const monthlyRate = inputs.rate / 100 / 12;
+  const totalPayments = inputs.term * 12;
+
+  const monthlyPrincipalInterest =
+    (totalLoanFinanced * monthlyRate * Math.pow(1 + monthlyRate, totalPayments)) /
+    (Math.pow(1 + monthlyRate, totalPayments) - 1);
+
+  // Annual Fee .35%
+  const annualFeeMonthly = (totalLoanFinanced * 0.0035) / 12;
+
+  const totalMonthly = monthlyPrincipalInterest + annualFeeMonthly;
+
+  const ResultRow = ({ label, value }) => (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        marginBottom: ".4rem",
+        fontSize: ".95rem",
+      }}
+    >
+      <span style={{ color: "#444" }}>{label}</span>
+      <span style={{ fontWeight: 700 }}>{value}</span>
+    </div>
+  );
+
+  return (
+    <section
+      style={{
+        padding: "2.5rem 1rem",
+        maxWidth: "1100px",
+        margin: "0 auto",
+      }}
+    >
+      {/* <h2
+        style={{
+          fontSize: "1.9rem",
+          marginBottom: "1rem",
+          fontWeight: 600,
+          color: "#1e1e1e",
+        }}
+      >
+        USDA Loan Calculator
+      </h2> */}
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 350px",
+          gap: "2rem",
+        }}
+      >
+        {/* Inputs */}
+        <div>
+          {[
+            ["Home Price", "homePrice"],
+            ["Down Payment %", "downPaymentPercent"],
+            ["Interest Rate %", "rate"],
+          ].map(([label, field], i) => (
+            <div key={i} style={{ marginBottom: "1rem" }}>
+              <label
+                style={{ display: "block", marginBottom: ".3rem", fontSize: ".85rem" }}
+              >
+                {label}
+              </label>
+              <input
+                type="number"
+                value={inputs[field]}
+                onChange={(e) => update(field, parseFloat(e.target.value))}
+                style={{
+                  width: "100%",
+                  padding: ".6rem",
+                  borderRadius: "8px",
+                  border: "1px solid #ccc",
+                }}
+              />
+            </div>
+          ))}
+
+          <div style={{ marginBottom: "1rem" }}>
+            <label
+              style={{ display: "block", marginBottom: ".3rem", fontSize: ".85rem" }}
+            >
+              Loan Term (years)
+            </label>
+            <select
+              value={inputs.term}
+              onChange={(e) => update("term", parseInt(e.target.value))}
+              style={{
+                width: "100%",
+                padding: ".6rem",
+                borderRadius: "8px",
+                border: "1px solid #ccc",
+              }}
+            >
+              <option value={30}>30 years</option>
+              <option value={15}>15 years</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Result Card */}
+        <div
+          style={{
+            background: "#fff",
+            borderRadius: "12px",
+            padding: "1.5rem",
+            border: "1px solid #eee",
+            boxShadow: "0 3px 10px rgba(0,0,0,0.05)",
+          }}
+        >
+          <h3 style={{ marginTop: 0, color: "#1e1e1e" }}>Estimated Monthly Payment</h3>
+
+          <ResultRow label="Loan Amount" value={`$${loanAmount.toLocaleString()}`} />
+          <ResultRow label="Financed Loan + Fee" value={`$${totalLoanFinanced.toLocaleString()}`} />
+          <ResultRow
+            label="Principal & Interest"
+            value={`$${monthlyPrincipalInterest.toFixed(2)}`}
+          />
+          <ResultRow
+            label="USDA Annual Fee"
+            value={`$${annualFeeMonthly.toFixed(2)}`}
+          />
+
+          <hr style={{ margin: "1rem 0" }} />
+
+          <ResultRow
+            label="Total Monthly Payment"
+            value={`$${totalMonthly.toFixed(2)}`}
+          />
+        </div>
+      </div>
+    </section>
+  );
+};

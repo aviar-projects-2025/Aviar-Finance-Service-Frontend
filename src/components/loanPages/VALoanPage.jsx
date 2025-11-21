@@ -140,6 +140,8 @@ const VALoanPage = () => {
           </p>
         </section>
 
+
+
         {/* BENEFITS */}
         <section style={{ ...container, ...section }}>
           <h2 style={title}>Key Benefits</h2>
@@ -186,6 +188,8 @@ const VALoanPage = () => {
             <Info label="Occupancy" value="Primary residence only" />
             <Info label="Key document" value="VA Certificate of Eligibility (COE)" />
           </div>
+
+          <VALoanCalculator />
         </section>
 
         <FAQSection container={container} section={section} card={card} small={small} />
@@ -288,3 +292,164 @@ const CTASection = ({ container, card, small }) => (
 );
 
 export default VALoanPage;
+
+
+
+
+
+import { useState } from "react";
+
+const VALoanCalculator = () => {
+  const [inputs, setInputs] = useState({
+    price: 350000,
+    down: 0,
+    rate: 6.25,
+    term: 30,
+    tax: 1.1,
+    insurance: 0.35,
+    fundingFee: 2.15, // typical 1st-time use no-down-payment
+    financeFee: true,
+  });
+
+  const update = (field, value) =>
+    setInputs({ ...inputs, [field]: value });
+
+  const downPaymentAmount = (inputs.price * inputs.down) / 100;
+  const baseLoan = inputs.price - downPaymentAmount;
+
+  const fundingFeeAmount = (baseLoan * inputs.fundingFee) / 100;
+
+  const finalLoanAmount = inputs.financeFee
+    ? baseLoan + fundingFeeAmount
+    : baseLoan;
+
+  const monthlyRate = inputs.rate / 100 / 12;
+  const totalPayments = inputs.term * 12;
+
+  const monthlyPI =
+    (finalLoanAmount * monthlyRate) /
+    (1 - Math.pow(1 + monthlyRate, -totalPayments));
+
+  const monthlyTax = (inputs.price * (inputs.tax / 100)) / 12;
+  const monthlyInsurance = (inputs.price * (inputs.insurance / 100)) / 12;
+
+  const total = monthlyPI + monthlyTax + monthlyInsurance;
+
+  const card = {
+    background: "#fff",
+    padding: "20px",
+    borderRadius: "14px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+  };
+
+  const input = {
+    width: "100%",
+    padding: "10px",
+    borderRadius: "10px",
+    border: "1px solid #d1d5db",
+    marginTop: "6px",
+    marginBottom: "12px",
+  };
+
+  return (
+    <section style={{ marginTop: "50px", maxWidth: "1100px", margin: "0 auto" }}>
+      {/* <h2 style={{ fontSize: "2rem", fontWeight: 700 }}>VA Mortgage Calculator</h2> */}
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 420px",
+          gap: "1.5rem",
+          marginTop: "20px",
+        }}
+      >
+        {/* LEFT FORM */}
+        <div style={card}>
+          <label>Home Price</label>
+          <input
+            type="number"
+            style={input}
+            value={inputs.price}
+            onChange={(e) => update("price", Number(e.target.value))}
+          />
+
+          <label>Down Payment %</label>
+          <input
+            type="number"
+            style={input}
+            value={inputs.down}
+            onChange={(e) => update("down", Number(e.target.value))}
+          />
+
+          <label>Interest Rate %</label>
+          <input
+            type="number"
+            style={input}
+            value={inputs.rate}
+            onChange={(e) => update("rate", Number(e.target.value))}
+          />
+
+          <label>Loan Term (Years)</label>
+          <input
+            type="number"
+            style={input}
+            value={inputs.term}
+            onChange={(e) => update("term", Number(e.target.value))}
+          />
+
+          <label>Property Tax %</label>
+          <input
+            type="number"
+            style={input}
+            value={inputs.tax}
+            onChange={(e) => update("tax", Number(e.target.value))}
+          />
+
+          <label>Home Insurance %</label>
+          <input
+            type="number"
+            style={input}
+            value={inputs.insurance}
+            onChange={(e) => update("insurance", Number(e.target.value))}
+          />
+
+          <label>VA Funding Fee %</label>
+          <input
+            type="number"
+            style={input}
+            value={inputs.fundingFee}
+            onChange={(e) => update("fundingFee", Number(e.target.value))}
+          />
+
+          <label style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <input
+              type="checkbox"
+              checked={inputs.financeFee}
+              onChange={(e) => update("financeFee", e.target.checked)}
+            />
+            Finance funding fee into loan
+          </label>
+        </div>
+
+        {/* RIGHT RESULTS */}
+        <div style={{ ...card, background: "#e0f2fe" }}>
+          <h3 style={{ marginTop: 0, fontWeight: 700 }}>Estimated Monthly Payment</h3>
+
+          <p><b>Principal & Interest:</b> ${monthlyPI.toFixed(2)}</p>
+          <p><b>Taxes:</b> ${monthlyTax.toFixed(2)}</p>
+          <p><b>Insurance:</b> ${monthlyInsurance.toFixed(2)}</p>
+          <p><b>Funding Fee Amount:</b> ${fundingFeeAmount.toFixed(2)}</p>
+
+          <hr />
+          <h2 style={{ margin: 0, fontWeight: 800 }}>
+            ${total.toFixed(2)} / month
+          </h2>
+
+          <p style={{ fontSize: ".9rem", opacity: 0.7, marginTop: "5px" }}>
+            Estimates only — actual qualification varies.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};

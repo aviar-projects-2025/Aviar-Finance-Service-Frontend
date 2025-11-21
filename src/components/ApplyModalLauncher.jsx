@@ -107,7 +107,7 @@ const ApplyModalLauncher = ({
                 />
               </div>
             )}
-
+  
             {status === "blocked" && (
               <div className="modal-body blocked-state">
                 <p style={{ marginBottom: "0.5rem" }}>

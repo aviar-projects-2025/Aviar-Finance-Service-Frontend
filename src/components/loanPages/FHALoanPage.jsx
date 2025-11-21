@@ -136,6 +136,8 @@ const FHALoanPage = () => {
           </p>
         </section>
 
+
+
         {/* BENEFITS */}
         <section style={{ ...container, ...section }}>
           <h2 style={title}>Key Benefits</h2>
@@ -184,6 +186,9 @@ const FHALoanPage = () => {
               value="Upfront + monthly FHA MIP required"
             />
           </div>
+
+
+          <FHACalculator />
         </section>
 
         <FAQSection section={section} container={container} card={card} small={small} />
@@ -232,6 +237,7 @@ const Info = ({ label, value }) => (
   </div>
 );
 
+
 /* FAQ SECTION */
 const FAQSection = ({ container, section, card, small }) => (
   <section style={{ ...container, ...section }}>
@@ -276,3 +282,141 @@ const CTASection = ({ container, card, small }) => (
 );
 
 export default FHALoanPage;
+
+
+
+
+import { useState } from "react";
+
+const FHACalculator = () => {
+  const [inputs, setInputs] = useState({
+    price: 300000,
+    down: 3.5,
+    rate: 6.5,
+    term: 30,
+    tax: 1.1,
+    insurance: 0.35,
+    mip: 0.55,
+  });
+
+  const update = (field, value) =>
+    setInputs({ ...inputs, [field]: Number(value) });
+
+  const loanAmount = inputs.price - (inputs.price * inputs.down) / 100;
+  const monthlyRate = inputs.rate / 100 / 12;
+  const numberOfPayments = inputs.term * 12;
+
+  // Principal & Interest
+  const monthlyPI =
+    (loanAmount * monthlyRate) /
+    (1 - Math.pow(1 + monthlyRate, -numberOfPayments));
+
+  // Taxes, Insurance, FHA MIP
+  const monthlyTax = (inputs.price * (inputs.tax / 100)) / 12;
+  const monthlyInsurance = (inputs.price * (inputs.insurance / 100)) / 12;
+  const monthlyMIP = (loanAmount * (inputs.mip / 100)) / 12;
+
+  const total = monthlyPI + monthlyTax + monthlyInsurance + monthlyMIP;
+
+  const card = {
+    background: "#fff",
+    padding: "20px",
+    borderRadius: "14px",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.06)",
+  };
+
+  const input = {
+    width: "100%",
+    padding: "10px",
+    borderRadius: "10px",
+    border: "1px solid #d1d5db",
+    marginTop: "6px",
+    marginBottom: "12px",
+  };
+
+  return (
+    <section style={{ marginTop: "50px", maxWidth: "1100px", margin: "0 auto" }}>
+      {/* <h2 style={{ fontSize: "2rem", fontWeight: 700 }}>FHA Mortgage Calculator</h2> */}
+
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 400px",
+          gap: "1.5rem",
+          marginTop: "20px",
+        }}
+      >
+        {/* LEFT FORM */}
+        <div style={card}>
+          <label>Home Price</label>
+          <input
+            type="number"
+            style={input}
+            value={inputs.price}
+            onChange={(e) => update("price", e.target.value)}
+          />
+
+          <label>Down Payment %</label>
+          <input
+            type="number"
+            style={input}
+            value={inputs.down}
+            onChange={(e) => update("down", e.target.value)}
+          />
+
+          <label>Interest Rate %</label>
+          <input
+            type="number"
+            style={input}
+            value={inputs.rate}
+            onChange={(e) => update("rate", e.target.value)}
+          />
+
+          <label>Loan Term (Years)</label>
+          <input
+            type="number"
+            style={input}
+            value={inputs.term}
+            onChange={(e) => update("term", e.target.value)}
+          />
+
+          <label>Property Tax %</label>
+          <input
+            type="number"
+            style={input}
+            value={inputs.tax}
+            onChange={(e) => update("tax", e.target.value)}
+          />
+
+          <label>Home Insurance %</label>
+          <input
+            type="number"
+            style={input}
+            value={inputs.insurance}
+            onChange={(e) => update("insurance", e.target.value)}
+          />
+        </div>
+
+        {/* RIGHT RESULTS */}
+        <div style={{ ...card, background: "#eef2ff" }}>
+          <h3 style={{ marginTop: 0, fontWeight: 700 }}>Estimated Monthly Payment</h3>
+
+          <p><b>Principal & Interest:</b> ${monthlyPI.toFixed(2)}</p>
+          <p><b>Taxes:</b> ${monthlyTax.toFixed(2)}</p>
+          <p><b>Insurance:</b> ${monthlyInsurance.toFixed(2)}</p>
+          <p><b>FHA MIP:</b> ${monthlyMIP.toFixed(2)}</p>
+
+          <hr />
+          <h2 style={{ margin: 0, fontWeight: 800 }}>
+            ${total.toFixed(2)} / month
+          </h2>
+
+          <p style={{ fontSize: ".9rem", opacity: 0.7, marginTop: "5px" }}>
+            Estimates only — your final amount may vary.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+};
+

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ApplyModalLauncher from "../../components/ApplyModalLauncher";
 import { Helmet } from "react-helmet";
 
@@ -187,6 +187,8 @@ const ConventionalLoanPage = () => {
           </p>
         </section>
 
+        <ConventionalCalculator />
+
         {/* FAQ */}
         <section style={{ ...container, ...section }}>
           <h2 style={title}>Frequently Asked Questions</h2>
@@ -263,3 +265,131 @@ const Info = ({ label, value }) => (
 );
 
 export default ConventionalLoanPage;
+
+
+
+
+
+
+/* ------------------------ CONVENTIONAL CALCULATOR ------------------------ */
+
+import {useMemo } from "react";
+
+const ConventionalCalculator = () => {
+  const [inputs, setInputs] = useState({
+    homePrice: 350000,
+    downPct: 5,
+    rate: 6.75,
+    termYears: 30,
+    taxes: 350,        // monthly estimated
+    insurance: 120,    // monthly estimated
+  });
+
+  const update = (e) => {
+    const { name, value } = e.target;
+    setInputs((prev) => ({ ...prev, [name]: Number(value) }));
+  };
+
+  const calc = useMemo(() => {
+    const downAmount = inputs.homePrice * (inputs.downPct / 100);
+    const loanAmount = inputs.homePrice - downAmount;
+
+    // Mortgage formula
+    const monthlyRate = inputs.rate / 100 / 12;
+    const termMonths = inputs.termYears * 12;
+    const PI =
+      (loanAmount * monthlyRate) /
+      (1 - Math.pow(1 + monthlyRate, -termMonths));
+
+    // PMI estimate
+    const pmiRate = inputs.downPct < 5 ? 0.01 : inputs.downPct < 10 ? 0.0075 : 0.005;
+    const PMI = inputs.downPct >= 20 ? 0 : (loanAmount * pmiRate) / 12;
+
+    const total = PI + PMI + inputs.taxes + inputs.insurance;
+
+    return { downAmount, loanAmount, PI, PMI, total };
+  }, [inputs]);
+
+  const box = {
+    background: "white",
+    padding: "22px",
+    borderRadius: "16px",
+    boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
+  };
+
+  const inputBox = {
+    width: "100%",
+    padding: "10px 12px",
+    borderRadius: "10px",
+    border: "1px solid #d1d5db",
+    fontSize: ".9rem",
+    marginBottom: "12px",
+  };
+
+  const label = {
+    fontSize: ".85rem",
+    color: "#334155",
+    fontWeight: 600,
+    marginBottom: "4px",
+  };
+
+  const row = {
+    display: "flex",
+    justifyContent: "space-between",
+    margin: ".35rem 0",
+    fontSize: ".9rem",
+    color: "#1e293b",
+  };
+
+  const dollars = (n) => "$" + n.toLocaleString(undefined, { maximumFractionDigits: 0 });
+
+  return (
+    <section style={{ maxWidth: "1000px", margin: "40px auto", padding: "0 20px" }}>
+      <h2 style={{ fontSize: "1.9rem", fontWeight: 700, color: "#0f172a", marginBottom: "14px" }}>
+        Conventional Affordability Snapshot
+      </h2>
+
+      <div style={box}>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))",
+          gap: "1.2rem"
+        }}>
+          <div>
+            <label style={label}>Home Price ($)</label>
+            <input type="number" name="homePrice" value={inputs.homePrice} onChange={update} style={inputBox} />
+
+            <label style={label}>Down Payment (%)</label>
+            <input type="number" name="downPct" value={inputs.downPct} onChange={update} style={inputBox} />
+
+            <label style={label}>Interest Rate (APR %)</label>
+            <input type="number" step=".01" name="rate" value={inputs.rate} onChange={update} style={inputBox} />
+
+            <label style={label}>Term (years)</label>
+            <select name="termYears" value={inputs.termYears} onChange={update} style={inputBox}>
+              <option value={30}>30-year</option>
+              <option value={20}>20-year</option>
+              <option value={15}>15-year</option>
+            </select>
+          </div>
+
+          <div>
+            <label style={label}>Monthly Taxes ($)</label>
+            <input type="number" name="taxes" value={inputs.taxes} onChange={update} style={inputBox} />
+
+            <label style={label}>Home Insurance ($)</label>
+            <input type="number" name="insurance" value={inputs.insurance} onChange={update} style={inputBox} />
+
+            <div style={{ padding: "1rem", background: "#f8fafc", borderRadius: "12px" }}>
+              <div style={row}><span>Loan Amount</span> <b>{dollars(calc.loanAmount)}</b></div>
+              <div style={row}><span>Principal & Interest</span> <b>{dollars(calc.PI)}</b></div>
+              {calc.PMI > 0 && <div style={row}><span>PMI</span> <b>{dollars(calc.PMI)}</b></div>}
+              <div style={row}><span>Taxes + Insurance</span> <b>{dollars(inputs.taxes + inputs.insurance)}</b></div>
+              <div style={row}><span>Total Monthly</span> <b>{dollars(calc.total)}</b></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
