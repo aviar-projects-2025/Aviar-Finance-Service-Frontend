@@ -20,25 +20,23 @@ import USDALoanPage from "./components/loanPages/USDALoanPage.jsx"
 import JumboLoansSection from "./components/loanPages/JumboLoansSection.jsx";
 import NonQMBankStatementSection from "./components/loanPages/NonQMBankStatementSection.jsx";
 import HomeEquitySection from "./components/loanPages/HomeEquitySection.jsx";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import BuyingInIllinoisPage from "./components/BuyingInIllinoisPage.jsx";
+import FirstTimeBuyerRoadmapPage from "./components/FirstTimeBuyerRoadmapPage.jsx";
+import RefinanceDecisionGuidePage from "./components/RefinanceDecisionGuidePage.jsx";
 // import JumboLoanPage from "./components/loanPages/JumboLoanPage.jsx"
 
 
 
-
 function App() {
-
-  const [openTool, setOpenTool] = useState(null); // <-- NEW
-
+  const [openTool, setOpenTool] = useState(null);
   const closeModal = () => setOpenTool(null);
 
   const [openLoan, setOpenLoan] = useState(null);
-
   const closeLoanModal = () => setOpenLoan(null);
 
-
   return (
-    <>
-
+    <BrowserRouter>
       <Header />
       <main>
         <Hero />
@@ -47,32 +45,32 @@ function App() {
 
         <Tools onOpenTool={setOpenTool} />
 
+        <Routes>
+          <Route path="/resources/buying-in-illinois" element={<BuyingInIllinoisPage />} />
+          <Route path="/resources/first-time-buyer-roadmap" element={<FirstTimeBuyerRoadmapPage />} />
+          <Route path="/resources/refinance-decision-guide" element={<RefinanceDecisionGuidePage />} />
+        </Routes>
+
         <Resources />
         <ContactForm />
       </main>
+
       <Footer />
 
-
-      {/* ---------- MODAL ---------- */}
+      {/* --- MODALS --- */}
       {openTool && (
         <div className="modal-backdrop" onClick={closeModal}>
-          <div
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={closeModal}>✖</button>
 
             {openTool === "Affordability" && <AffordabilityCalculator />}
             {openTool === "Refinance" && <RefinanceSavings />}
             {openTool === "Rate" && <RateScenario />}
             {openTool === "Checklist" && <DocumentChecklist />}
-
           </div>
         </div>
       )}
 
-
-      {/* Loan Page Modals */}
       {openLoan && (
         <div className="modal-backdrop" onClick={closeLoanModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -85,14 +83,10 @@ function App() {
             {openLoan === "JUMBO" && <JumboLoansSection />}
             {openLoan === "NON_QM" && <NonQMBankStatementSection />}
             {openLoan === "HOME_EQUITY" && <HomeEquitySection />}
-
           </div>
         </div>
       )}
-
-    </>
-
-
+    </BrowserRouter>
   );
 }
 

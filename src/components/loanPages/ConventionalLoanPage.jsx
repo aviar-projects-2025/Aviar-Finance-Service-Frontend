@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ApplyModalLauncher from "../../components/ApplyModalLauncher";
 import { Helmet } from "react-helmet";
 
+
 const ConventionalLoanPage = () => {
   const container = {
     maxWidth: "1000px",
@@ -187,7 +188,7 @@ const ConventionalLoanPage = () => {
           </p>
         </section>
 
-        <ConventionalCalculator />
+        <ConventionalCalculatorSection />
 
         {/* FAQ */}
         <section style={{ ...container, ...section }}>
@@ -274,6 +275,7 @@ export default ConventionalLoanPage;
 /* ------------------------ CONVENTIONAL CALCULATOR ------------------------ */
 
 import {useMemo } from "react";
+import ConventionalCalculatorSection from "./ConventionalCalculaterSection";
 
 const ConventionalCalculator = () => {
   const [inputs, setInputs] = useState({

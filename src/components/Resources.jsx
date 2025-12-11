@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import ApplyModalLauncher from "./ApplyModalLauncher";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import BuyingInIllinoisPage from "./BuyingInIllinoisPage";
+import FirstTimeBuyerRoadmapPage from "./FirstTimeBuyerRoadmapPage";
+import RefinanceDecisionGuidePage from "./RefinanceDecisionGuidePage";
 
 const Resources = () => {
 
@@ -108,7 +112,7 @@ const Resources = () => {
       backgroundColor: "#e0e7ff",
       color: "#1e3a8a",
     },
-      modalOverlay: {
+    modalOverlay: {
       position: "fixed",
       top: 0,
       left: 0,
@@ -145,23 +149,39 @@ const Resources = () => {
 
   const [open, setOpen] = useState(false);
 
-    const featuredGuides = [
+  const featuredGuides = [
     {
       title: "Buying in Illinois: What to Know",
       desc: "Taxes, insurance, HOA basics for Illinois buyers.",
+      path: "/resources/buying-in-illinois",
+      comp: <BuyingInIllinoisPage />,
       full: "This guide covers transfer taxes, county tax cycles, homeowner association fees, and closing expectations for Illinois property purchases...",
     },
     {
       title: "First-Time Buyer Roadmap",
       desc: "Follow the steps from pre-approval to closing.",
+      path: "/resources/first-time-buyer-roadmap",
+      comp: <FirstTimeBuyerRoadmapPage />,
       full: "Learn the timeline from pre-approval to house shopping, underwriting, appraisal and closing so you know exactly what to expect...",
     },
     {
       title: "Refinance Decision Guide",
       desc: "Should you refi now or wait? Here's a simple breakdown.",
+      path: "/resources/refinance-decision-guide",
+      comp: <RefinanceDecisionGuidePage />,
       full: "Compare current rates, expected savings, break-even period, and equity position to determine if refinancing makes sense...",
     },
   ];
+
+
+  <BrowserRouter>
+    <Routes>
+      <Route path="/resources/buying-in-illinois" element={<BuyingInIllinoisPage />} />
+      <Route path="/resources/first-time-buyer-roadmap" element={<FirstTimeBuyerRoadmapPage />} />
+      <Route path="/resources/refinance-decision-guide" element={<RefinanceDecisionGuidePage />} />
+
+    </Routes>
+  </BrowserRouter>
 
 
   // const checklists = [
@@ -221,6 +241,7 @@ const Resources = () => {
   //   ));
   // };
 
+  // navigate(`${item.path}`) () => openModal(item)
 
 
   const renderCards = (items) =>
@@ -318,17 +339,67 @@ const Resources = () => {
       </div>
 
       {modalOpen && (
-        <div style={styles.modalOverlay} onClick={closeModal}>
-          <div style={styles.modalBox} onClick={(e) => e.stopPropagation()}>
-            <button style={styles.closeBtn} onClick={closeModal}>
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            background: "rgba(0, 0, 0, 0.45)",
+            backdropFilter: "blur(6px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 9999,
+          }}
+          onClick={closeModal}
+        >
+          <div
+            style={{
+              background: "#fff",
+              borderRadius: "16px",
+              padding: "30px",
+              width: "90vw",
+              maxWidth: "90%",
+              maxHeight: "90%",
+              overflowY: "auto",
+              position: "relative",
+              boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
+              transition: "all 0.25s ease",
+              transform: modalOpen ? "scale(1)" : "scale(0.9)",
+              opacity: modalOpen ? 1 : 0,
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={closeModal}
+              style={{
+                position: "absolute",
+                top: "12px",
+                right: "12px",
+                background: "#ff4d4f",
+                border: "none",
+                color: "#fff",
+                fontSize: "20px",
+                borderRadius: "50%",
+                width: "32px",
+                height: "32px",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "0.2s",
+              }}
+            >
               ×
             </button>
 
-            <h2>{selectedItem?.title}</h2>
-            <p style={{ marginTop: "10px", fontSize: ".95rem", color: "#333" }}>{selectedItem?.full}</p>
+            <div style={{ marginTop: "10px" }}>{selectedItem.comp}</div>
           </div>
         </div>
       )}
+
 
 
       {/* Glossary */}

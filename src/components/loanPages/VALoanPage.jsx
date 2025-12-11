@@ -1,6 +1,7 @@
 import React from "react";
 import ApplyModalLauncher from "../../components/ApplyModalLauncher";
 import { Helmet } from "react-helmet";
+import VaCalculatorSection from "./VaCalculatorSection"
 
 const VALoanPage = () => {
   const container = { maxWidth: "1100px", margin: "0 auto", padding: "20px" };
@@ -189,7 +190,8 @@ const VALoanPage = () => {
             <Info label="Key document" value="VA Certificate of Eligibility (COE)" />
           </div>
 
-          <VALoanCalculator />
+          {/* <VALoanCalculator /> */}
+          <VaCalculatorSection />
         </section>
 
         <FAQSection container={container} section={section} card={card} small={small} />
